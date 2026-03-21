@@ -1,0 +1,36 @@
+# RVC 模型推理依赖
+# 请确保使用 Python 3.11+ 运行
+
+# 核心机器学习
+torch>=2.0.0
+numpy>=1.21.0
+scipy>=1.7.0
+
+# 音频处理
+librosa>=0.9.0
+soundfile>=0.11.0
+ffmpeg-python>=0.2.0
+av>=9.0.0
+
+# 音频分析
+pyworld>=0.3.0
+parselmouth>=1.0.0
+torchcrepe>=0.0.20
+
+# 模型相关
+fairseq>=0.12.0
+faiss-cpu>=1.7.0
+pyannote>=3.0.0  # 可选，用于语音处理
+
+# Web UI
+gradio>=3.0.0
+
+# 工具
+python-dotenv>=0.19.0
+tqdm>=4.62.0
+
+# 可选：Intel 加速（如果支持）
+# intel-extension-for-pytorch>=2.0.0
+
+# 可选：DirectML（Windows 加速）
+# torch-directml>=0.2.0
