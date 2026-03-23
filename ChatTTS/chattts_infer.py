@@ -5,10 +5,14 @@ ChatTTS 命令行推理脚本
 使用 params_chattts.json 作为参数进行推理
 
 用法:
-    python chattts_infer.py "输入文本" [params_chattts.json]
+    python chattts_infer.py "输入文本" [-p params_chattts.json]
 
 参数文件默认路径: <script_dir>/params_chattts.json
-输出路径: E:/tts_output/ChatTTS/
+输出路径: {TTS_OUTPUT_DIR}/ChatTTS/（可通过环境变量 TTS_OUTPUT_DIR 覆盖）
+
+Python 环境自动检测：
+    优先使用仓库内嵌 Python: <repo_root>/python/python.exe
+    fallback 到系统默认 Python
 """
 
 import os
@@ -18,12 +22,37 @@ import argparse
 import soundfile as sf
 
 # ============================================================
-# 项目根目录（动态计算，相对于脚本位置）
+# 路径计算（全部相对于脚本位置）
 # ============================================================
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)  # packages/chatttts/
-CHATTS_DIR = SCRIPT_DIR  # ChatTTS core 在 scripts 同一目录
-sys.path.insert(0, PROJECT_ROOT)
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))  # ChatTTS/
+CHATTS_DIR = SCRIPT_DIR
+
+# 通过上一级目录找到仓库根目录，然后导入 _python_resolver
+# 这样可以复用路径解析逻辑
+_repo_root = os.path.dirname(SCRIPT_DIR)  # 仓库根目录
+_python_resolver_path = os.path.join(_repo_root, "scripts", "_python_resolver.py")
+
+# 如果 scripts/_python_resolver.py 存在，导入它以复用路径解析
+if os.path.exists(_python_resolver_path):
+    sys.path.insert(0, os.path.join(_repo_root, "scripts"))
+    from _python_resolver import get_output_dir, get_chattts_output_dir
+
+# ============================================================
+# 配置（使用相对路径 + 环境变量覆盖）
+# ============================================================
+# params 文件在脚本同级目录
+DEFAULT_PARAMS_FILE = os.path.join(SCRIPT_DIR, "params_chattts.json")
+
+# 输出目录：优先从环境变量读取，默认 E:\tts_output\ChatTTS
+_TTS_BASE = os.environ.get("TTS_OUTPUT_DIR", r"E:\tts_output")
+OUTPUT_DIR = os.path.join(_TTS_BASE, "ChatTTS")
+
+# ============================================================
+# 将仓库根目录加入 sys.path 以便导入 tools 包
+# ============================================================
+# ChatTTS/ 下有 ChatTTS/ChatTTS/ChatTTS/ 结构
+# 脚本在 ChatTTS/chattts_infer.py，需要把 ChatTTS/ 加入 sys.path
+sys.path.insert(0, CHATTS_DIR)
 
 from tools.audio import float_to_int16
 from tools.logger import get_logger
@@ -31,12 +60,6 @@ from tools.seeder import TorchSeedContext
 from tools.normalizer import normalizer_en_nemo_text, normalizer_zh_tn
 
 import ChatTTS
-
-# ============================================================
-# 配置
-# ============================================================
-DEFAULT_PARAMS_FILE = os.path.join(PROJECT_ROOT, "params_chattts.json")
-OUTPUT_DIR = r"E:/tts_output/ChatTTS"
 
 # ============================================================
 # 初始化 ChatTTS

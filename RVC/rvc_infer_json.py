@@ -19,10 +19,17 @@ import argparse
 import soundfile as sf
 
 # ============================================================
-# 项目根目录（动态计算，相对于脚本位置）
+# 路径计算（全部相对于脚本位置）
 # ============================================================
-RVC_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+RVC_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))  # RVC/
 RVC_PROJECT_DIR = RVC_SCRIPT_DIR  # 推理脚本所在目录即项目根目录
+
+# 通过上一级目录找到仓库根目录，导入路径解析模块
+_repo_root = os.path.dirname(RVC_SCRIPT_DIR)  # 仓库根目录
+_python_resolver_path = os.path.join(_repo_root, "scripts", "_python_resolver.py")
+if os.path.exists(_python_resolver_path):
+    sys.path.insert(0, os.path.join(_repo_root, "scripts"))
+    from _python_resolver import get_output_dir, get_rvc_output_dir
 
 # 保存原始 argv，防止 Config 的 argparse 干扰脚本参数解析
 _real_argv = sys.argv[:]
@@ -71,7 +78,8 @@ os.environ.setdefault('rmvpe_root', os.path.join(RVC_PROJECT_DIR, 'assets', 'rmv
 # ============================================================
 # 路径处理：中文路径 -> ASCII 临时路径
 # ============================================================
-INDEX_TEMP_DIR = r"C:\temp_index"
+# 索引临时目录：放在仓库根目录下，避免 C:\ 权限问题
+INDEX_TEMP_DIR = os.path.join(_repo_root, "temp_index")
 
 def copy_to_ascii(src_path):
     """将中文路径的文件复制到 ASCII 临时目录"""
@@ -214,9 +222,12 @@ def run_inference(input_audio, params):
     sr, audio = audio_data
 
     # 步骤5: 保存输出
-    os.makedirs(r"E:\tts_output\推理", exist_ok=True)
+    # 输出目录：优先从环境变量 TTS_OUTPUT_DIR 读取
+    _rvc_out_dir = os.environ.get("TTS_OUTPUT_DIR", r"E:\tts_output")
+    _rvc_out = os.path.join(_rvc_out_dir, "推理")
+    os.makedirs(_rvc_out, exist_ok=True)
     ts = input_audio.replace('\\', '/').split('/')[-1].rsplit('.', 1)[0]
-    output_path = f"E:/tts_output/推理/{ts}_to_{model_name}_p{pitch}_{f0_method}.wav"
+    output_path = os.path.join(_rvc_out, f"{ts}_to_{model_name}_p{pitch}_{f0_method}.wav")
     sf.write(output_path, audio, sr)
 
     duration = len(audio) / sr
