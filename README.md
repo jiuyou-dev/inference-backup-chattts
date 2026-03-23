@@ -1,27 +1,30 @@
 # ChatTTS 推理备份仓库
 
 ## 开源项目
-**原项目地址：** https://github.com/2noise/ChatTTS  
+**原项目地址：** https://github.com/2noise/ChatTTS
 **许可证：** BSD-3-Clause
 
 ---
 
-## 启动方式
+## WebUI 启动方式
+
+```bash
+# 进入仓库目录
+cd inference-backup-chattts
+
+# 启动 ChatTTS WebUI（端口 8080）
+python examples/web/webui.py
+```
+
+启动后访问：**http://localhost:8080**
+
+---
+
+## 推理脚本启动方式
 
 ```bash
 python chattts_infer.py "要说的文本内容"
 ```
-
-或指定参数文件：
-```bash
-python chattts_infer.py "文本" -p params_chattts.json
-```
-
----
-
-## WebUI 启动
-
-本仓库提供了简化版推理脚本，如需图形界面请访问原项目。
 
 ---
 
