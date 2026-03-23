@@ -1,0 +1,89 @@
+# ============================================================
+# Python 项目配置
+# ============================================================
+# 支持 uv, pip, poetry, pdm 等包管理器
+
+[project]
+name = "voice-generation"
+version = "1.0.0"
+description = "飞书语情感语音生成框架 - ChatTTS + RVC"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+
+authors = [
+    {name = "JiuyouLab", email = "jiuyou@example.com"}
+]
+
+keywords = [
+    "tts", "voice-conversion", "chattts", "rvc", 
+    "speech-synthesis", "feishu", "voice-cloning"
+]
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Sound :: Audio",
+]
+
+dependencies = [
+    "torch>=2.1.0",
+    "torchaudio",
+    "numpy<3.0.0",
+    "scipy>=1.7.0",
+    "soundfile>=0.11.0",
+    "vector-quantize-pytorch",
+    "transformers>=4.41.1",
+    "vocos",
+    "tqdm",
+    "fairseq>=0.12.0",
+]
+
+[project.optional-dependencies]
+# GPU 支持 (CUDA 12.1)
+cuda = [
+    "torch>=2.1.0",
+    "torchaudio",
+]
+
+# 开发依赖
+dev = [
+    "pytest>=7.0",
+    "black>=23.0",
+    "ruff>=0.1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/jiuyou-dev/feishu-voice-skill"
+Repository = "https://github.com/jiuyou-dev/feishu-voice-skill"
+Issues = "https://github.com/jiuyou-dev/feishu-voice-skill/issues"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "."}
+packages = ["ChatTTS", "ChatTTS.ChatTTS", "ChatTTS.ChatTTS.ChatTTS", "ChatTTS.ChatTTS.ChatTTS.config", "ChatTTS.ChatTTS.ChatTTS.model", "ChatTTS.ChatTTS.ChatTTS.utils", "ChatTTS.ChatTTS.tools"]
+
+[tool.black]
+line-length = 100
+target-version = ["py39", "py310", "py311"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "C4"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]

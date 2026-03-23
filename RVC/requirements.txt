@@ -1,0 +1,20 @@
+# RVC 模型推理依赖
+# 请确保使用 Python 3.9+ 运行
+
+# 核心机器学习
+torch>=2.0.0
+numpy>=1.21.0,<3.0.0
+scipy>=1.7.0
+
+# 音频处理
+soundfile>=0.11.0
+
+# 模型相关
+fairseq>=0.12.0
+
+# 工具
+tqdm>=4.62.0
+
+# 可选：GPU 加速
+# NVIDIA CUDA: pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+# AMD ROCm: pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm5.6
