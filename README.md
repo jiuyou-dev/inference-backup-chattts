@@ -181,40 +181,17 @@ pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu128
 
 ---
 
-## Python 环境自动检测
+## Python 环境要求
 
-本项目使用 **Python 路径自动检测机制**，所有脚本均优先使用仓库内嵌 Python，无需手动配置。
+本项目**仅支持仓库内嵌 Python**，位于 `<repo_root>/python/python.exe`（Python 3.11.9）。
 
-### 检测优先级
-
-| 优先级 | Python 路径 | 说明 |
-|--------|------------|------|
-| 🥇 第1优先 | `<repo_root>/python/python.exe` | 仓库内嵌 Python（推荐） |
-| 🥈 第2优先 | `C:\Espressif\tools\idf-python\python.exe` | 九幽工作区兼容 |
-| 🥉 第3优先 | 系统默认 Python | fallback |
-
-### Python 自动检测模块
-
-核心模块：`scripts/_python_resolver.py`
-
-```python
-import sys
-import os
-
-# 添加 scripts 目录
-sys.path.insert(0, os.path.join("<repo_root>", "scripts"))
-from _python_resolver import get_python_exe, get_repo_root
-
-python_exe = get_python_exe()   # 自动选择正确的 Python
-repo_root = get_repo_root()       # 获取仓库根目录
-```
+> **重要**：不提供其他 Python 环境选项，请确保使用仓库内嵌 Python。
 
 ### 环境变量
 
 | 环境变量 | 说明 | 默认值 |
 |----------|------|--------|
 | `TTS_OUTPUT_DIR` | TTS 输出根目录 | `E:\tts_output` |
-| `PYTHON_EXE` | 指定 Python 路径（覆盖自动检测） | 自动检测 |
 
 ---
 
