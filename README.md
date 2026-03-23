@@ -222,14 +222,27 @@ repo_root = get_repo_root()       # 获取仓库根目录
 
 如果你是在 OpenClaw、Qclaw 或其他 Agent 框架中运行此技能的 AI Agent，请按以下步骤操作：
 
-### 第一步：读取 SKILL.md
+### 步骤 0：克隆仓库（如尚未克隆）
+
+如果 Agent 尚未获取到仓库代码，先克隆到本地：
+
+```bash
+git clone https://github.com/jiuyou-dev/feishu-voice-skill.git <目标目录>
+cd feishu-voice-skill
+```
+
+> **仓库地址**：https://github.com/jiuyou-dev/feishu-voice-skill
+>
+> **说明**：克隆后，Agent 应将 `<目标目录>` 记录为 `repo_root`，后续所有路径解析都基于这个目录。
+
+### 步骤 1：读取 SKILL.md
 
 Agent 应读取仓库中的 `SKILL.md` 文件，理解：
 - **触发关键词**：当用户说"发语音"、"与我说"、"和我说"、"说给我听"等时触发
 - **路径解析模块**：`scripts/_python_resolver.py` 负责 Python 路径和输出路径的自动解析
 - **Python 环境**：自动检测，无须硬编码
 
-### 第二步：获取 Python 解释器
+### 步骤 2：获取 Python 解释器
 
 Agent 通过导入 `_python_resolver.py` 获取正确的 Python 路径：
 
@@ -245,7 +258,7 @@ python_exe = get_python_exe()   # 自动选择正确的 Python
 repo_root = get_repo_root()       # 获取仓库根目录
 ```
 
-### 第三步：执行环境检查
+### 步骤 3：执行环境检查
 
 ```python
 import subprocess
@@ -261,7 +274,7 @@ if result.returncode != 0:
     print("环境检查失败:", result.stderr)
 ```
 
-### 第四步：根据检查结果向用户报告
+### 步骤 4：根据检查结果向用户报告
 
 **情况一：检查通过（返回码 = 0）**
 
@@ -309,7 +322,7 @@ if result.returncode != 0:
 语音技能仍可正常使用，但推荐配置 GPU 环境。
 ```
 
-### 第五步：技能使用流程
+### 步骤 5：技能使用流程
 
 环境检查通过后，Agent 可以按以下流程使用技能：
 
@@ -356,7 +369,7 @@ feishu_result = subprocess.run(
 print(feishu_result.stdout)
 ```
 
-### 第六步：遇到错误时的处理
+### 步骤 6：遇到错误时的处理
 
 当技能出现任何错误时，Agent 应主动引导用户反馈：
 
@@ -479,7 +492,7 @@ feishu-voice-skill/              ← 仓库根目录 (<repo_root>)
 │
 ├── RVC/                       # RVC 推理模块
 │   ├── rvc_infer_json.py      # RVC 推理脚本
-│   ├── params_rvc.json        # RVC 参数
+│   ├── params_rvc.json       # RVC 参数
 │   └── assets/                # 模型资源
 │       └── weights/           # RVC 模型权重
 │
