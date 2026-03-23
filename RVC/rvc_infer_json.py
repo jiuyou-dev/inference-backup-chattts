@@ -8,7 +8,7 @@ RVC 命令行推理脚本
     python rvc_infer_json.py "input_audio.wav" [params_rvc.json]
 
 参数文件默认路径: <script_dir>/params_rvc.json
-输出路径: 自动生成，保存到 E:/tts_output/推理/
+输出路径: 自动生成，保存到 {TTS_OUTPUT_DIR}/推理/（默认 <repo_root>/tts_output/推理/）
 """
 
 import os
@@ -222,9 +222,12 @@ def run_inference(input_audio, params):
     sr, audio = audio_data
 
     # 步骤5: 保存输出
-    # 输出目录：优先从环境变量 TTS_OUTPUT_DIR 读取
-    _rvc_out_dir = os.environ.get("TTS_OUTPUT_DIR", r"E:\tts_output")
-    _rvc_out = os.path.join(_rvc_out_dir, "推理")
+    # 输出目录：优先从环境变量 TTS_OUTPUT_DIR 读取，默认相对于仓库根目录
+    _rvc_out_dir = os.environ.get("TTS_OUTPUT_DIR")
+    if _rvc_out_dir:
+        _rvc_out = os.path.join(_rvc_out_dir, "推理")
+    else:
+        _rvc_out = os.path.join(_repo_root, "tts_output", "推理")
     os.makedirs(_rvc_out, exist_ok=True)
     ts = input_audio.replace('\\', '/').split('/')[-1].rsplit('.', 1)[0]
     output_path = os.path.join(_rvc_out, f"{ts}_to_{model_name}_p{pitch}_{f0_method}.wav")

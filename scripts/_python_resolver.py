@@ -58,8 +58,11 @@ def get_rvc_dir():
 
 
 def get_output_dir():
-    """获取 TTS 输出目录（可通过环境变量 TTS_OUTPUT_DIR 覆盖）"""
-    return os.environ.get("TTS_OUTPUT_DIR", r"E:\tts_output")
+    """获取 TTS 输出目录（默认相对于仓库根目录，可通过环境变量 TTS_OUTPUT_DIR 覆盖）"""
+    custom = os.environ.get("TTS_OUTPUT_DIR")
+    if custom:
+        return custom
+    return os.path.join(REPO_ROOT, "tts_output")
 
 
 def get_chattts_output_dir():

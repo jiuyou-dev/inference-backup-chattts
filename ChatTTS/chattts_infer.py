@@ -44,8 +44,11 @@ if os.path.exists(_python_resolver_path):
 DEFAULT_PARAMS_FILE = os.path.join(SCRIPT_DIR, "params_chattts.json")
 
 # 输出目录：优先从环境变量读取，默认 E:\tts_output\ChatTTS
-_TTS_BASE = os.environ.get("TTS_OUTPUT_DIR", r"E:\tts_output")
-OUTPUT_DIR = os.path.join(_TTS_BASE, "ChatTTS")
+_TTS_BASE = os.environ.get("TTS_OUTPUT_DIR")
+if _TTS_BASE:
+    OUTPUT_DIR = os.path.join(_TTS_BASE, "ChatTTS")
+else:
+    OUTPUT_DIR = os.path.join(CHATTS_DIR, "..", "tts_output", "ChatTTS")
 
 # ============================================================
 # 将仓库根目录加入 sys.path 以便导入 tools 包
